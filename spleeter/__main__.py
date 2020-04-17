@@ -38,6 +38,8 @@ def main(argv):
             enable_tensorflow_logging()
         if arguments.command == 'separate':
             from .commands.separate import entrypoint
+        elif arguments.command == 'separate_drums':
+            from .commands.separate_drums import entrypoint
         elif arguments.command == 'train':
             from .commands.train import entrypoint
         elif arguments.command == 'evaluate':

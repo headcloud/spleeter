@@ -192,6 +192,25 @@ def _create_separate_parser(parser_factory):
     parser.add_argument('-B', '--stft-backend', **OPT_STFT_BACKEND)
     return parser
 
+def _create_separate_drums_parser(parser_factory):
+    """ Creates an argparser for separation command
+
+    :param parser_factory: Factory to use to create parser instance.
+    :returns: Created and configured parser.
+    """
+    parser = parser_factory('separate_drums', help='Separate drums from other mix in files')
+    _add_common_options(parser)
+    parser.add_argument('-i', '--inputs', **OPT_INPUT)
+    parser.add_argument('-o', '--output_path', **OPT_OUTPUT)
+    parser.add_argument('-f', '--filename_format', **OPT_FORMAT)
+    parser.add_argument('-d', '--duration', **OPT_DURATION)
+    parser.add_argument('-s', '--offset', **OPT_OFFSET)
+    parser.add_argument('-c', '--codec', **OPT_CODEC)
+    parser.add_argument('-b', '--birate', **OPT_BITRATE)
+    parser.add_argument('-m', '--mwf', **OPT_MWF)
+    parser.add_argument('-B', '--stft-backend', **OPT_STFT_BACKEND)
+    return parser
+
 
 def create_argument_parser():
     """ Creates overall command line parser for Spleeter.
@@ -203,6 +222,7 @@ def create_argument_parser():
     subparsers.dest = 'command'
     subparsers.required = True
     _create_separate_parser(subparsers.add_parser)
+    _create_separate_drums_parser(subparsers.add_parser)
     _create_train_parser(subparsers.add_parser)
     _create_evaluate_parser(subparsers.add_parser)
     return parser

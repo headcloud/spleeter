@@ -215,9 +215,32 @@ class Separator(object):
             duration=duration,
             sample_rate=self._sample_rate)
         sources = self.separate(waveform, audio_descriptor)
-        self.save_to_file(  sources, audio_descriptor, destination,
+        self.save_to_file( sources, audio_descriptor, destination,
                             filename_format, codec, audio_adapter,
                             bitrate, synchronous)
+
+    def separate_drums_to_file(
+        self, audio_descriptor, destination,
+        audio_adapter=get_default_audio_adapter(),
+        offset=0, duration=600., codec='wav', bitrate='128k',
+        filename_format='{filename}/{instrument}.{codec}',
+        synchronous=True):
+        
+        waveform, sample_rate = audio_adapter.load(
+            audio_descriptor,
+            offset=offset,
+            duration=duration,
+            sample_rate=self._sample_rate)
+        sources = self.separate(waveform, audio_descriptor)
+
+        # get all but the drums
+        all_but_the_drums = {"mix": sources["vocals"] + sources["bass"] + sources["other"]}
+        drums = {k:v for (k,v) in sources.items() if k=="drums"}
+        self.save_to_file(all_but_the_drums, audio_descriptor, destination,
+                            filename_format, codec, audio_adapter,
+                            bitrate, synchronous)
+        self.save_to_file(drums, audio_descriptor, destination, filename_format,
+                            codec, audio_adapter, bitrate, synchronous)
 
     def save_to_file(
             self, sources, audio_descriptor, destination,
